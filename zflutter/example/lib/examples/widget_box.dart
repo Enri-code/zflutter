@@ -13,22 +13,22 @@ class ZBoxToBoxAdapter extends StatelessWidget {
   final Color color;
   final bool visible;
 
-  final Widget frontChild;
-  final Widget rearChild;
-  final Widget leftChild;
-  final Widget rightChild;
-  final Widget topChild;
-  final Widget bottomChild;
+  final Widget? frontChild;
+  final Widget? rearChild;
+  final Widget? leftChild;
+  final Widget? rightChild;
+  final Widget? topChild;
+  final Widget? bottomChild;
 
   //var front = ZVector.only(z: 1);
   ZBoxToBoxAdapter({
-    this.width,
-    this.height,
-    this.depth,
+    required this.width,
+    required this.height,
+    required this.depth,
     this.stroke = 1,
     this.fill = true,
-    this.color,
-    this.visible,
+    required this.color,
+    this.visible = true,
     this.frontChild,
     this.rearChild,
     this.leftChild,

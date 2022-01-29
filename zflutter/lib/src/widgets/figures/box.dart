@@ -17,21 +17,21 @@ class ZBox extends StatelessWidget {
   final Color color;
   final bool visible;
 
-  final Color frontColor;
-  final Color rearColor;
-  final Color leftColor;
-  final Color rightColor;
-  final Color topColor;
-  final Color bottomColor;
+  final Color? frontColor;
+  final Color? rearColor;
+  final Color? leftColor;
+  final Color? rightColor;
+  final Color? topColor;
+  final Color? bottomColor;
 
   ZBox({
-    this.width,
-    this.height,
-    this.depth,
+    required this.width,
+    required this.height,
+    required this.depth,
     this.stroke = 1,
     this.fill = true,
-    this.color,
-    this.visible,
+    required this.color,
+    this.visible = true,
     this.frontColor,
     this.rearColor,
     this.leftColor,

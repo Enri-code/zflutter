@@ -1,3 +1,4 @@
+//@dart=2.12
 import 'package:flutter/rendering.dart';
 
 import '../core.dart';
@@ -25,8 +26,8 @@ class RenderZToBoxAdapter extends RenderZBox
   }
 
   RenderZToBoxAdapter({
-    double width,
-    double height,
+    required double width,
+    required double height,
   })  : _width = width,
         _height = height;
 
@@ -35,12 +36,12 @@ class RenderZToBoxAdapter extends RenderZBox
 
   // bool get isRepaintBoundary => true;
 
-  List<ZPathCommand> transformedPath;
+  List<ZPathCommand>? transformedPath;
 
   @override
   void performLayout() {
     final ZParentData anchorParentData = parentData as ZParentData;
-    child.layout(BoxConstraints.expand(height: height, width: width),
+    child?.layout(BoxConstraints.expand(height: height, width: width),
         parentUsesSize: false);
     size = constraints.smallest;
 
@@ -59,7 +60,7 @@ class RenderZToBoxAdapter extends RenderZBox
       origin =
           origin.transform(matrix4.translate, matrix4.rotate, matrix4.scale);
 
-      transformedPath = transformedPath
+      transformedPath = transformedPath!
           .map((e) =>
               e.transform(matrix4.translate, matrix4.rotate, matrix4.scale))
           .toList();
@@ -70,10 +71,10 @@ class RenderZToBoxAdapter extends RenderZBox
 
   @override
   void performSort() {
-    assert(transformedPath.isNotEmpty);
-    var pointCount = this.transformedPath.length;
-    var firstPoint = this.transformedPath[0].endRenderPoint;
-    var lastPoint = this.transformedPath[pointCount - 1].endRenderPoint;
+    assert(transformedPath!.isNotEmpty);
+    var pointCount = this.transformedPath!.length;
+    var firstPoint = this.transformedPath![0].endRenderPoint;
+    var lastPoint = this.transformedPath![pointCount - 1].endRenderPoint;
     // ignore the final point if self closing shape
     var isSelfClosing = pointCount > 2 && firstPoint == lastPoint;
     if (isSelfClosing) {
@@ -82,7 +83,7 @@ class RenderZToBoxAdapter extends RenderZBox
 
     double sortValueTotal = 0;
     for (var i = 0; i < pointCount; i++) {
-      sortValueTotal += this.transformedPath[i].endRenderPoint.z;
+      sortValueTotal += this.transformedPath![i].endRenderPoint.z;
     }
     this.sortValue = sortValueTotal / pointCount;
   }
@@ -127,7 +128,7 @@ class RenderZToBoxAdapter extends RenderZBox
       context.pushLayer(
         layer,
         (context, _) {
-          context.paintChild(child, offset - Offset(width / 2, height / 2));
+          context.paintChild(child!, offset - Offset(width / 2, height / 2));
         },
         Offset.zero,
         childPaintBounds: context.estimatedBounds,

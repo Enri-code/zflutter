@@ -1,3 +1,4 @@
+//@dart=2.12
 import 'package:flutter/rendering.dart';
 
 import '../core.dart';
@@ -10,6 +11,11 @@ class RenderZBox extends RenderBox {
   void performSort() {
     sortValue = this.origin.z;
   }
+
+  @override
+  Size computeDryLayout(BoxConstraints constraints) {
+    return Size.zero;
+  }
 }
 
 enum SortMode { inherit, stack, update }
@@ -19,8 +25,8 @@ class RenderZMultiChildBox extends RenderZBox
         ContainerRenderObjectMixin<RenderZBox, ZParentData>,
         RenderBoxContainerDefaultsMixin<RenderZBox, ZParentData> {
   RenderZMultiChildBox({
-    List<RenderZBox> children,
-    SortMode sortMode = SortMode.inherit,
+    List<RenderZBox>? children,
+    SortMode? sortMode = SortMode.inherit,
   })  : assert(sortMode != null),
         this.sortMode = sortMode {
     addAll(children);
@@ -43,7 +49,7 @@ class RenderZMultiChildBox extends RenderZBox
 
     final BoxConstraints constraints = this.constraints;
 
-    RenderZBox child = firstChild;
+    RenderZBox? child = firstChild;
 
     while (child != null) {
       final ZParentData childParentData = child.parentData as ZParentData;
@@ -58,7 +64,7 @@ class RenderZMultiChildBox extends RenderZBox
         width = math.max(width, childSize.width);
         height = math.max(height, childSize.height);*/
 
-      child = childParentData?.nextSibling;
+      child = childParentData.nextSibling;
     }
     performSort();
   }
@@ -73,7 +79,7 @@ class RenderZMultiChildBox extends RenderZBox
   void performSort() {
     if (sortMode == SortMode.stack || sortMode == SortMode.update) {
       final children = getFlatChildren();
-      sortValue = children.fold(0,
+      sortValue = children.fold<double>(0,
               (previousValue, element) => previousValue + element.sortValue) /
           children.length;
     } else {
@@ -84,12 +90,12 @@ class RenderZMultiChildBox extends RenderZBox
   @override
   bool get sizedByParent => true;
 
-  SortMode sortMode;
+  SortMode? sortMode;
 
   List<RenderZBox> getFlatChildren() {
     List<RenderZBox> children = [];
 
-    RenderZBox child = firstChild;
+    RenderZBox? child = firstChild;
 
     while (child != null) {
       final ZParentData childParentData = child.parentData as ZParentData;
@@ -104,7 +110,7 @@ class RenderZMultiChildBox extends RenderZBox
         width = math.max(width, childSize.width);
         height = math.max(height, childSize.height);*/
 
-      child = childParentData?.nextSibling;
+      child = childParentData.nextSibling;
     }
     return children;
   }
@@ -141,7 +147,7 @@ class ZParentData extends ContainerBoxParentData<RenderZBox> {
     this.rotate = ZVector.zero,
     this.scale = ZVector.identity,
     this.translate = ZVector.zero,
-    List<ZTransform> transforms,
+    List<ZTransform>? transforms,
   }) : this.transforms = transforms ?? [];
 
   ZParentData clone() => ZParentData(
